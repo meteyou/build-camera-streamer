@@ -89,9 +89,16 @@ jobs:
           cat combined_versions.txt
 
       - name: Compare with last result
+        id: new_result
         run: |
           touch last.txt
           same=$(diff last.txt combined_versions.txt > /dev/null && echo "same" || echo "different")
           echo "same=$same" >> "$GITHUB_OUTPUT"
           
           cp combined_versions.txt last.txt
+
+      - name: "Trigger build if there is a new version"
+        if: ${{ steps.new_result.outputs.same == 'different' }}
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: build_release.yaml
