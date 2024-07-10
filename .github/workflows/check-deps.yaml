@@ -9,7 +9,8 @@ jobs:
   get-config:
     runs-on: ubuntu-latest
     outputs:
-      debian_version: ${{ steps.config.outputs.debian_version }}
+      libcamera0_bullseye_armhf: ${{ steps.config.outputs.libcamera0_bullseye_armhf }}
+      libcamera0_bullseye_arm64: ${{ steps.config.outputs.libcamera0_bullseye_arm64 }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,36 +21,31 @@ jobs:
         with:
           file_path: config.yaml
 
-  get-deps:
+  check-libcamera-bullseye32:
     runs-on: ubuntu-latest
     needs: get-config
-    outputs:
-      test-libcamera0_version: ${{ steps.libcamera0_version.outputs.version }}
-    strategy:
-      matrix:
-        debian_version: ${{fromJson(needs.get-config.outputs.debian_version)}}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Lookup libcamera0 version
         id: libcamera0_version
         uses: OctoPrint/actions/latest-apt-version@main
         with:
           package: libcamera0
-          url: https://archive.raspberrypi.org/debian/dists/${{ matrix.debian_version }}/main/binary-armhf/Packages
+          url: https://archive.raspberrypi.org/debian/dists/bullseye/main/binary-armhf/Packages
+
+      - name: Lookup libcamera0 version
+        id: libcamera0_version2
+        uses: OctoPrint/actions/latest-apt-version@main
+        with:
+          package: libcamera0
+          url: https://archive.raspberrypi.org/debian/dists/bullseye/main/binary-arm64/Packages
+
+      - name: Lookup libcamera0 version
+        id: libcamera0_version3
+        uses: OctoPrint/actions/latest-apt-version@main
+        with:
+          package: libcamera0
+          url: https://archive.raspberrypi.org/debian/dists/bookworm/main/binary-arm64/Packages
 
       - name: Output libcamera0 version
         run: |
           echo libcamera0_version: ${{ steps.libcamera0_version.outputs.version }}
-
-  check-results:
-    runs-on: ubuntu-latest
-    needs: get-deps
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Check get-deps results
-        run: |
-          echo libcamera0_version: ${{ needs.get-deps.outputs.libcamera0_version }}
