@@ -37,7 +37,7 @@ jobs:
         uses: dangmai/get-apt-package-version@v1.2.0
         with:
           package: libcamera0
-          baseImage: dtcooper/raspberrypi-os:${{ matrix.debian_version }}
+          baseImage: ghcr.io/dtcooper/raspberrypi-os:${{ matrix.debian_version }}
 
 #      - name: Get base URL
 #        id: base_url
