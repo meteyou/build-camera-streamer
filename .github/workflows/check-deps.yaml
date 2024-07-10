@@ -1,0 +1,23 @@
+name: Check Dependencies
+
+on:
+  #schedule:
+  #  - cron: '45 * * * *'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read coonfig
+        id: config
+        uses: pietrobolcato/action-read-yaml@1.0.0
+        with:
+          config: config.yaml
+
+      - name: Output config
+        run: |
+          echo debian_version: ${{ steps.config.outputs['debian_version'] }}
