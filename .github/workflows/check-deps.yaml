@@ -30,8 +30,6 @@ jobs:
       matrix:
         debian_version: ${{fromJson(needs.get-config.outputs.debian_versions)}}
         arch: ${{fromJson(needs.get-config.outputs.archs)}}
-    outputs:
-      libcamera0_version_${{ matrix.debian_version }}_${{ matrix.arch }}: ${{ steps.libcamera0_version.outputs.version }}
     steps:
       - name: Lookup libcamera0 version
         id: apt_parser
