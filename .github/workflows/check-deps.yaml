@@ -97,7 +97,7 @@ jobs:
           
           cp combined_versions.txt last.txt
 
-      - name: "Trigger build if there is a new version"
+      - name: Trigger build if there is a new version
         if: ${{ steps.new_result.outputs.same == 'different' }}
         uses: benc-uk/workflow-dispatch@v1
         with:
