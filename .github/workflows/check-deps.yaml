@@ -10,9 +10,8 @@ jobs:
     name: Get Config
     runs-on: ubuntu-latest
     outputs:
-      debian_version: ${{ steps.config.outputs.debian_version }}
-      libcamera0_bullseye_armhf: ${{ steps.config.outputs.libcamera0_bullseye_armhf }}
-      libcamera0_bullseye_arm64: ${{ steps.config.outputs.libcamera0_bullseye_arm64 }}
+      debian_versions: ${{ steps.config.outputs.debian_versions }}
+      archs: ${{ steps.config.outputs.archs }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
