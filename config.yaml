@@ -1,3 +1,6 @@
-debian_version:
+debian_versions:
   - bullseye
   - bookworm
+archs:
+  - armhf
+  - arm64

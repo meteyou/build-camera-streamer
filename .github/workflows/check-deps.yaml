@@ -29,10 +29,10 @@ jobs:
     needs: get-config
     strategy:
       matrix:
-        debian_version: ${{fromJson(needs.get-config.outputs.debian_version)}}
-        arch: [armhf, arm64]
+        debian_version: ${{fromJson(needs.get-config.outputs.debian_versions)}}
+        arch: ${{fromJson(needs.get-config.outputs.archs)}}
     outputs:
-      libcamera0_version: ${{ steps.libcamera0_version.outputs.version }}
+      libcamera0_version_${{ matrix.debian_version }}_${{ matrix.arch }}: ${{ steps.libcamera0_version.outputs.version }}
     steps:
       - name: Lookup libcamera0 version
         id: apt_parser
@@ -59,10 +59,18 @@ jobs:
             echo "version=${{ steps.apt_search.outputs.version }}" >> $GITHUB_OUTPUT
           fi
 
-  check-libcamera-bullseye32:
+  check-versions:
     runs-on: ubuntu-latest
     needs: get-deps
     steps:
       - name: Output libcamera0 version
         run: |
-          echo libcamera0_version: ${{ needs.get-deps.outputs }}
+          debian_versions=(${{fromJson(needs.get-config.outputs.debian_versions)}})
+          archs=(${{fromJson(needs.get-config.outputs.archs)}})
+
+          for debian_version in "${debian_versions[@]}"; do
+            for arch in "${archs[@]}"; do
+              version_var="needs.get-deps.outputs.libcamera0_version_${debian_version}_${arch}"
+              echo "libcamera0_version_${debian_version}_${arch}: ${!version_var}"
+            done
+          done
