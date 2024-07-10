@@ -1,4 +1,4 @@
-# Build camera-streamer for Mainsail-Crew
+# Build camera-streamer for Crowsnest
 This repository is used to build the [camera-streamer](https://github.com/ayufan/camera-streamer) for the Mainsail-Crew
 project crowsnest. Camera-streamer is a webcam streaming server used to stream the webcam feed to the Mainsail web
 interface. It is maintained by [ayufan](https://github.com/ayufan).
