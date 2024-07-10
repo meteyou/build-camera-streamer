@@ -56,15 +56,15 @@ jobs:
           else
           version="${{ steps.apt_search.outputs.version }}"
           fi
-          echo "${{ matrix.debian_version }}_${{ matrix.arch }}=$version" >> versions.txt
+          echo "${{ matrix.debian_version }}_${{ matrix.arch }}=$version" >> versions_${{ matrix.debian_version }}_${{ matrix.arch }}.txt
 
       - name: Upload versions file
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: versions
-          path: versions.txt
+          name: versions_${{ matrix.debian_version }}_${{ matrix.arch }}
+          path: versions_${{ matrix.debian_version }}_${{ matrix.arch }}.txt
 
-  check-libcamera-bullseye32:
+  output:
     runs-on: ubuntu-latest
     needs: get-deps
     steps:
@@ -74,9 +74,13 @@ jobs:
       - name: Download versions file
         uses: actions/download-artifact@v3
         with:
-          name: versions
+          pattern: versions_*
           path: .
+
+      - name: Combine versions files
+        run: |
+          cat versions_*.txt > combined_versions.txt
 
       - name: Output libcamera0 versions
         run: |
-          cat versions.txt
+          cat combined_versions.txt
