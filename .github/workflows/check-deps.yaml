@@ -58,11 +58,11 @@ jobs:
           fi
           echo "${{ matrix.debian_version }}_${{ matrix.arch }}=$version" >> versions.txt
 
-          - name: Upload versions file
-            uses: actions/upload-artifact@v3
-            with:
-              name: versions
-              path: versions.txt
+      - name: Upload versions file
+        uses: actions/upload-artifact@v3
+        with:
+          name: versions
+          path: versions.txt
 
   check-libcamera-bullseye32:
     runs-on: ubuntu-latest
