@@ -49,27 +49,36 @@ jobs:
           package: libcamera0.0.3
           baseImage: debian:${{ matrix.debian_version }}
 
-      - name: Output libcamera version
-        id: libcamera0_version
+      - name: Save libcamera version
+        id: save_version
         run: |
+          version=""
           if [ '${{ matrix.debian_version }}' == 'bullseye' ]; then
-            echo "version=${{ steps.apt_parser.outputs.version }}" >> $GITHUB_OUTPUT
+          version="${{ steps.apt_parser.outputs.version }}"
           else
-            echo "version=${{ steps.apt_search.outputs.version }}" >> $GITHUB_OUTPUT
+          version="${{ steps.apt_search.outputs.version }}"
           fi
+          echo "${{ matrix.debian_version }}_${{ matrix.arch }}=$version" >> versions.txt
 
-  check-versions:
+          - name: Upload versions file
+            uses: actions/upload-artifact@v3
+            with:
+              name: versions
+              path: versions.txt
+
+  check-libcamera-bullseye32:
     runs-on: ubuntu-latest
     needs: get-deps
     steps:
-      - name: Output libcamera0 version
-        run: |
-          debian_versions=(${{fromJson(needs.get-config.outputs.debian_versions)}})
-          archs=(${{fromJson(needs.get-config.outputs.archs)}})
+      - name: Checkout
+        uses: actions/checkout@v4
 
-          for debian_version in "${debian_versions[@]}"; do
-            for arch in "${archs[@]}"; do
-              version_var="needs.get-deps.outputs.libcamera0_version_${debian_version}_${arch}"
-              echo "libcamera0_version_${debian_version}_${arch}: ${!version_var}"
-            done
-          done
+      - name: Download versions file
+        uses: actions/download-artifact@v3
+        with:
+          name: versions
+          path: .
+
+      - name: Output libcamera0 versions
+        run: |
+          cat versions.txt
