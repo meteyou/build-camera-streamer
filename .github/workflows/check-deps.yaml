@@ -41,7 +41,7 @@ jobs:
             echo "package=libcamera0" >> $GITHUB_OUTPUT
           else
             echo "base_url=http://deb.debian.org/debian" >> $GITHUB_OUTPUT
-            echo "file=Packages.gz" >> $GITHUB_OUTPUT
+            echo "file=Packages.xz" >> $GITHUB_OUTPUT
             echo "package=libcamera0.0.3" >> $GITHUB_OUTPUT
           fi
 
