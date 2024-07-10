@@ -30,21 +30,21 @@ jobs:
         uses: OctoPrint/actions/latest-apt-version@main
         with:
           package: libcamera0
-          url: https://archive.raspberrypi.org/debian/dists/bullseye/main/binary-armhf/Packages
+          url: http://archive.raspberrypi.org/debian/dists/bullseye/main/binary-armhf/Packages
 
       - name: Lookup libcamera0 version
         id: libcamera0_version2
         uses: OctoPrint/actions/latest-apt-version@main
         with:
           package: libcamera0
-          url: https://archive.raspberrypi.org/debian/dists/bullseye/main/binary-arm64/Packages
+          url: http://archive.raspberrypi.org/debian/dists/bullseye/main/binary-arm64/Packages
 
       - name: Lookup libcamera0 version
         id: libcamera0_version3
         uses: OctoPrint/actions/latest-apt-version@main
         with:
           package: libcamera0
-          url: https://archive.raspberrypi.org/debian/dists/bookworm/main/binary-arm64/Packages
+          url: http://archive.raspberrypi.org/debian/dists/bookworm/main/binary-arm64/Packages
 
       - name: Output libcamera0 version
         run: |
