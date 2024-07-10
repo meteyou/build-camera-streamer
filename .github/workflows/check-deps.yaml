@@ -37,7 +37,7 @@ jobs:
         uses: OctoPrint/actions/latest-apt-version@main
         with:
           package: libcamera0
-          url: http://archive.raspberrypi.org/debian/dists/${{ matrix.debian_version }}/main/binary-armhf/Packages
+          url: https://archive.raspberrypi.org/debian/dists/${{ matrix.debian_version }}/main/binary-armhf/Packages
 
       - name: Output libcamera0 version
         run: |
