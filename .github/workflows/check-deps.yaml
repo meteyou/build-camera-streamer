@@ -59,7 +59,7 @@ jobs:
         uses: dangmai/get-apt-package-version@v1.2.0
         with:
           package: libcamera0.0.3
-          baseImage: ubuntu:${{ matrix.debian_version }}
+          baseImage: debian:${{ matrix.debian_version }}
 
   check-libcamera-bullseye32:
     runs-on: ubuntu-latest
