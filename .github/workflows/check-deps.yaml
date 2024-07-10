@@ -36,9 +36,11 @@ jobs:
         id: base_url
         run: |
           if [ "${{ matrix.debian_version }}" == "bullseye" ]; then
-            echo "::set-output name=base_url::http://archive.raspberrypi.org/debian"
+            echo "base_url=http://archive.raspberrypi.org/debian" >> $GITHUB_OUTPUT
+            echo "file=Packages" >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=base_url::http://deb.debian.org/debian"
+            echo "base_url=http://deb.debian.org/debian" >> $GITHUB_OUTPUT
+            echo "file=Packages.gz" >> $GITHUB_OUTPUT
           fi
 
       - name: Lookup libcamera0 version
@@ -46,7 +48,7 @@ jobs:
         uses: OctoPrint/actions/latest-apt-version@main
         with:
           package: libcamera0
-          url: ${{ steps.base_url.outputs.base_url }}/dists/${{ matrix.debian_version }}/main/binary-${{ matrix.arch }}/Packages
+          url: ${{ steps.base_url.outputs.base_url }}/dists/${{ matrix.debian_version }}/main/binary-${{ matrix.arch }}/${{ steps.base_url.outputs.file }}
 
   check-libcamera-bullseye32:
     runs-on: ubuntu-latest
