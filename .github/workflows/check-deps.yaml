@@ -79,7 +79,7 @@ jobs:
 
       - name: Combine versions files
         run: |
-          cat versions_* > combined_versions.txt
+          cat versions_*.txt/versions_*.txt > combined_versions.txt
 
       - name: Output libcamera0 versions
         run: |
