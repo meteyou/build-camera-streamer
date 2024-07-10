@@ -53,7 +53,7 @@ jobs:
       - name: Output libcamera version
         id: libcamera0_version
         run: |
-          if '${{ matrix.debian_version }}' == 'bullseye' then
+          if ['${{ matrix.debian_version }}' == 'bullseye']; then
             echo "version=${{ steps.apt_parser.outputs.version }}" >> $GITHUB_OUTPUT
           else
             echo "version=${{ steps.apt_search.outputs.version }}" >> $GITHUB_OUTPUT
