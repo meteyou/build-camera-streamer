@@ -12,12 +12,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Read coonfig
+      - name: Run YAML to Github Output Action
         id: config
-        uses: pietrobolcato/action-read-yaml@1.0.0
+        uses: christian-ci/action-yaml-github-output@v2
         with:
-          config: config.yaml
+          file_path: config.yaml
 
       - name: Output config
         run: |
-          echo debian_version: ${{ steps.config.outputs['debian_version'] }}
+          echo debian_version: ${{ steps.config.outputs.debian_version }}
