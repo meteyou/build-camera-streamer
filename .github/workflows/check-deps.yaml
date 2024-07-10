@@ -32,34 +32,31 @@ jobs:
     outputs:
       libcamera0_version: ${{ steps.libcamera0_version.outputs.version }}
     steps:
-      - name: Get base URL
-        id: base_url
-        run: |
-          if [ "${{ matrix.debian_version }}" == "bullseye" ]; then
-            echo "base_url=http://archive.raspberrypi.org/debian" >> $GITHUB_OUTPUT
-            echo "file=Packages" >> $GITHUB_OUTPUT
-            echo "package=libcamera0" >> $GITHUB_OUTPUT
-          else
-            echo "base_url=http://deb.debian.org/debian" >> $GITHUB_OUTPUT
-            echo "file=Packages.gz" >> $GITHUB_OUTPUT
-            echo "package=libcamera0.0.3" >> $GITHUB_OUTPUT
-          fi
 
       - name: Lookup libcamera0 version
-        id: libcamera0_version
+        id: apt-parser
         if: matrix.debian_version == 'bullseye'
         uses: OctoPrint/actions/latest-apt-version@main
         with:
-          package: ${{ steps.base_url.outputs.package }}
-          url: ${{ steps.base_url.outputs.base_url }}/dists/${{ matrix.debian_version }}/main/binary-${{ matrix.arch }}/${{ steps.base_url.outputs.file }}
+          package: libcamera0
+          url: http://archive.raspberrypi.org/debian/dists/bullseye/main/binary-${{ matrix.arch }}/Packages
 
-      - name: Get version
-        id: get_version
+      - name: Lookup libcamera0.0.3 version
+        id: apt-search
         if: matrix.debian_version != 'bullseye'
         uses: dangmai/get-apt-package-version@v1.2.0
         with:
           package: libcamera0.0.3
           baseImage: debian:${{ matrix.debian_version }}
+
+      - name: Output libcamera version
+        id: libcamera0_version
+        run: |
+          if (apt-parser.outputs.version) {
+            echo "version=${{ steps.apt-parser.outputs.version }}" >> $GITHUB_OUTPUT
+          } else {
+            echo "version=${{ steps.apt-search.outputs.version }}" >> $GITHUB_OUTPUT
+          }
 
   check-libcamera-bullseye32:
     runs-on: ubuntu-latest
