@@ -65,4 +65,4 @@ jobs:
     steps:
       - name: Output libcamera0 version
         run: |
-          echo libcamera0_version: ${{ needs.get-deps.outputs.libcamera0_version }}
+          echo libcamera0_version: ${{ needs.get-deps.outputs }}
