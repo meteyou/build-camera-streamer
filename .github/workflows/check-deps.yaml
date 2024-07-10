@@ -61,7 +61,7 @@ jobs:
       - name: Upload versions file
         uses: actions/upload-artifact@v4
         with:
-          name: versions_${{ matrix.debian_version }}_${{ matrix.arch }}
+          name: versions_${{ matrix.debian_version }}_${{ matrix.arch }}.txt
           path: versions_${{ matrix.debian_version }}_${{ matrix.arch }}.txt
 
   output:
