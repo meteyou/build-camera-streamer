@@ -62,7 +62,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: versions_${{ matrix.debian_version }}_${{ matrix.arch }}.txt
-          path: versions_${{ matrix.debian_version }}_${{ matrix.arch }}.txt
+          path: .
 
   output:
     runs-on: ubuntu-latest
