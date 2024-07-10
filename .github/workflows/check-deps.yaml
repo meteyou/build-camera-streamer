@@ -32,9 +32,8 @@ jobs:
     outputs:
       libcamera0_version: ${{ steps.libcamera0_version.outputs.version }}
     steps:
-
       - name: Lookup libcamera0 version
-        id: apt-parser
+        id: apt_parser
         if: matrix.debian_version == 'bullseye'
         uses: OctoPrint/actions/latest-apt-version@main
         with:
@@ -42,7 +41,7 @@ jobs:
           url: http://archive.raspberrypi.org/debian/dists/bullseye/main/binary-${{ matrix.arch }}/Packages
 
       - name: Lookup libcamera0.0.3 version
-        id: apt-search
+        id: apt_search
         if: matrix.debian_version != 'bullseye'
         uses: dangmai/get-apt-package-version@v1.2.0
         with:
@@ -52,10 +51,10 @@ jobs:
       - name: Output libcamera version
         id: libcamera0_version
         run: |
-          if (apt-parser.outputs.version) {
-            echo "version=${{ steps.apt-parser.outputs.version }}" >> $GITHUB_OUTPUT
+          if (matrix.debian_version == 'bullseye') {
+            echo "version=${{ steps.apt_parser.outputs.version }}" >> $GITHUB_OUTPUT
           } else {
-            echo "version=${{ steps.apt-search.outputs.version }}" >> $GITHUB_OUTPUT
+            echo "version=${{ steps.apt_search.outputs.version }}" >> $GITHUB_OUTPUT
           }
 
   check-libcamera-bullseye32:
