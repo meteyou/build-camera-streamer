@@ -47,10 +47,19 @@ jobs:
 
       - name: Lookup libcamera0 version
         id: libcamera0_version
+        if: matrix.debian_version == 'bullseye'
         uses: OctoPrint/actions/latest-apt-version@main
         with:
           package: ${{ steps.base_url.outputs.package }}
           url: ${{ steps.base_url.outputs.base_url }}/dists/${{ matrix.debian_version }}/main/binary-${{ matrix.arch }}/${{ steps.base_url.outputs.file }}
+
+      - name: Get version
+        id: get_version
+        if: matrix.debian_version != 'bullseye'
+        uses: dangmai/get-apt-package-version@v1.2.0
+        with:
+          package: libcamera0.0.3
+          baseImage: ubuntu:${{ matrix.debian_version }}
 
   check-libcamera-bullseye32:
     runs-on: ubuntu-latest
