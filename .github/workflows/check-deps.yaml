@@ -38,11 +38,11 @@ jobs:
         id: set_docker_arch
         run: |
           if [ "${{ matrix.arch }}" == "armhf" ]; then
-            echo "DOCKER_ARCH=arm32v7" >> $GITHUB_ENV
+            echo "arch=arm32v7" >> $GITHUB_OUTPUT
           el if [ "${{ matrix.arch }}" == "arm64" ]; then
-            echo "DOCKER_ARCH=arm64v8" >> $GITHUB_ENV
+            echo "arch=arm64v8" >> $GITHUB_OUTPUT
           else
-            echo "DOCKER_ARCH=${{ matrix.arch }}" >> $GITHUB_ENV
+            echo "arch=${{ matrix.arch }}" >> $GITHUB_OUTPUT
           fi
 
       - name: Set up QEMU
@@ -59,7 +59,7 @@ jobs:
           .
         env:
           DEBIAN_VERSION: ${{ matrix.debian_version }}
-          DOCKER_ARCH: ${{ env.DOCKER_ARCH }}/
+          DOCKER_ARCH: ${{ steps.set_docker_arch.outputs.arch }}/
 
       - name: Run Docker
         id: docker
