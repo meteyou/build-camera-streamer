@@ -111,9 +111,13 @@ jobs:
         run: |
           touch last.txt
           same=$(diff last.txt combined_versions.txt > /dev/null && echo "same" || echo "different")
-          echo "same=$same" >> "$GITHUB_OUTPUT"
+          echo "same=$same" >> $GITHUB_OUTPUT
           
           cp combined_versions.txt last.txt
+
+      - name: output result
+        run: |
+          cat $GITHUB_OUTPUT
 
       - name: Trigger build if there is a new version
         if: ${{ steps.new_result.outputs.same == 'different' }}
