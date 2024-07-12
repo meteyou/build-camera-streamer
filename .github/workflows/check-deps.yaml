@@ -39,7 +39,7 @@ jobs:
         run: |
           if [ "${{ matrix.arch }}" == "armhf" ]; then
             echo "arch=arm32v7" >> $GITHUB_OUTPUT
-          el if [ "${{ matrix.arch }}" == "arm64" ]; then
+          elif [ "${{ matrix.arch }}" == "arm64" ]; then
             echo "arch=arm64v8" >> $GITHUB_OUTPUT
           else
             echo "arch=${{ matrix.arch }}" >> $GITHUB_OUTPUT
