@@ -31,6 +31,9 @@ jobs:
         debian_version: ${{fromJson(needs.get-config.outputs.debian_versions)}}
         arch: ${{fromJson(needs.get-config.outputs.archs)}}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Lookup libcamera0 version
         id: apt_parser
         if: matrix.debian_version == 'bullseye'
