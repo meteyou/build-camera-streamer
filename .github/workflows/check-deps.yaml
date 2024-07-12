@@ -43,7 +43,8 @@ jobs:
         id: apt_search
         if: matrix.debian_version != 'bullseye'
         #uses: dangmai/get-apt-package-version@v1.2.0
-        uses: meteyou/get-apt-package-version@main
+        #uses: meteyou/get-apt-package-version@main
+        uses: ./.github/actions/get-apt-package-version
         with:
           package: libcamera0.0.3
           baseImage: debian:${{ matrix.debian_version }}
