@@ -117,7 +117,7 @@ jobs:
 
       - name: output result
         run: |
-          cat $GITHUB_OUTPUT
+          echo $GITHUB_OUTPUT
 
       - name: Trigger build if there is a new version
         if: ${{ steps.new_result.outputs.same == 'different' }}
