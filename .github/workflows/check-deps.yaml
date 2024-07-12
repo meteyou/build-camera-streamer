@@ -52,7 +52,8 @@ jobs:
 
       - name: Run Docker
         id: docker
-        run: docker run --rm get_apt_version sh -c "echo \"version=\$(apt policy libcamera0 | sed -n 's/\\s*Candidate: //p')\"" >> $GITHUB_OUTPUT
+        run: |
+          docker run --rm get_apt_version sh -c "echo \"version=\$(apt policy libcamera0 | sed -n 's/\\s*Candidate: //p')\"" >> $GITHUB_OUTPUT
 
       - name: Save libcamera version
         id: save_version
