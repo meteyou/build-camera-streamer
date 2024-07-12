@@ -34,6 +34,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set DOCKER_ARCH
+        id: set_docker_arch
+        run: |
+          if [ "${{ matrix.arch }}" == "armhf" ]; then
+            echo "DOCKER_ARCH=arm32v7" >> $GITHUB_ENV
+          el if [ "${{ matrix.arch }}" == "arm64" ]; then
+            echo "DOCKER_ARCH=arm64v8" >> $GITHUB_ENV
+          else
+            echo "DOCKER_ARCH=${{ matrix.arch }}" >> $GITHUB_ENV
+          fi
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -48,7 +59,7 @@ jobs:
           .
         env:
           DEBIAN_VERSION: ${{ matrix.debian_version }}
-          DOCKER_ARCH: ${{ matrix.arch }}/
+          DOCKER_ARCH: ${{ env.DOCKER_ARCH }}/
 
       - name: Run Docker
         id: docker
