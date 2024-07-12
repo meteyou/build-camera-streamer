@@ -53,9 +53,12 @@ jobs:
       - name: Create container
         run: docker create --name get_apt_version get_apt_version
 
+      - name: Start container
+        run: docker run -d --name get_apt_version get_apt_version sleep infinity
+
       - name: Get version number
         id: docker
-        run: docker exce get_apt_version sh -c "echo \"version=\$(apt policy libcamera0 | sed -n 's/\\s*Candidate: //p')\"" >> $GITHUB_OUTPUT
+        run: docker exec get_apt_version sh -c "echo \"version=\$(apt policy libcamera0 | sed -n 's/\\s*Candidate: //p')\"" >> $GITHUB_OUTPUT
 
       - name: Save libcamera version
         id: save_version
