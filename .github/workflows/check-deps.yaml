@@ -50,13 +50,12 @@ jobs:
           DEBIAN_VERSION: ${{ matrix.debian_version }}
           DOCKER_ARCH: ${{ matrix.arch }}/
 
-      - uses: addnab/docker-run-action@v3
+      - name: Create container
+        run: docker create --name get_apt_version get_apt_version
+
+      - name: Get version number
         id: docker
-        with:
-          image: get_apt_version
-          run: |
-            version=$(apt policy libcamera0 | sed -n 's/\s*Candidate: //p')
-            echo "version=$version" >> $GITHUB_OUTPUT
+        run: docker exce get_apt_version sh -c "echo \"version=\$(apt policy libcamera0 | sed -n 's/\\s*Candidate: //p')\"" >> $GITHUB_OUTPUT
 
       - name: Save libcamera version
         id: save_version

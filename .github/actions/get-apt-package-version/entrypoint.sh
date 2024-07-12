@@ -33,4 +33,4 @@ then
 fi
 
 VERSION=$(apt policy "$PACKAGE" | sed -n 's/\s*Candidate: //p')
-echo "version=bla" >> $GITHUB_OUTPUT
+echo "version=$(apt policy "$PACKAGE" | sed -n 's/\s*Candidate: //p')" >> $GITHUB_OUTPUT
