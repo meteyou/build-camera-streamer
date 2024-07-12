@@ -52,6 +52,7 @@ jobs:
         run: |
           docker build \
           --tag get_apt_version \
+          --target build \
           --file .github/Dockerfile_simple \
           --build-arg DOCKER_ARCH \
           --build-arg DEBIAN_VERSION \
