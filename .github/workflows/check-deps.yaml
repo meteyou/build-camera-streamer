@@ -110,7 +110,6 @@ jobs:
         id: new_result
         run: |
           touch last.txt
-          diff last.txt combined_versions.txt
           same=$(diff last.txt combined_versions.txt > /dev/null && echo "same" || echo "different")
           echo "same=$same" >> $GITHUB_OUTPUT
           
