@@ -39,7 +39,7 @@ jobs:
 
       - name: Build Dockerfile
         run: |
-          docker build --target get_apt_version \
+          docker build \
           --tag get_apt_version \
           --file .github/Dockerfile_simple \
           --build-arg DOCKER_ARCH \
