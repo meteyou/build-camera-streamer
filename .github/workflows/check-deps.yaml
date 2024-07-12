@@ -34,33 +34,34 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Lookup libcamera0 version
-        id: apt_parser
-        if: matrix.debian_version == 'bullseye'
-        uses: OctoPrint/actions/latest-apt-version@main
-        with:
-          package: libcamera0
-          url: http://archive.raspberrypi.org/debian/dists/bullseye/main/binary-${{ matrix.arch }}/Packages
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
 
-      - name: Lookup libcamera0.0.3 version
-        id: apt_search
-        if: matrix.debian_version != 'bullseye'
-        #uses: dangmai/get-apt-package-version@v1.2.0
-        #uses: meteyou/get-apt-package-version@main
-        uses: ./.github/actions/get-apt-package-version
+      - name: Build Dockerfile
+        run: |
+          docker build --target get_apt_version \
+          --tag get_apt_version \
+          --file .github/Dockerfile_simple \
+          --build-arg DOCKER_ARCH \
+          --build-arg DEBIAN_VERSION \
+          --build-arg BUILD_TYPE \
+          .
+        env:
+          DEBIAN_VERSION: ${{ matrix.debian_version }}
+          DOCKER_ARCH: ${{ matrix.arch }}/
+
+      - uses: addnab/docker-run-action@v3
+        id: docker
         with:
-          package: libcamera0.0.3
-          baseImage: debian:${{ matrix.debian_version }}
+          image: get_apt_version
+          run: |
+            version=$(apt policy libcamera0 | sed -n 's/\s*Candidate: //p')
+            echo "version=$version" >> $GITHUB_OUTPUT
 
       - name: Save libcamera version
         id: save_version
         run: |
-          version=""
-          if [ '${{ matrix.debian_version }}' == 'bullseye' ]; then
-          version="${{ steps.apt_parser.outputs.version }}"
-          else
-          version="${{ steps.apt_search.outputs.version }}"
-          fi
+          version="${{ steps.docker.outputs.version }}"
           echo "${{ matrix.debian_version }}_${{ matrix.arch }}=$version" >> versions_${{ matrix.debian_version }}_${{ matrix.arch }}.txt
 
       - name: Upload versions file
