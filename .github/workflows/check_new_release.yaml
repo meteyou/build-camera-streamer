@@ -1,0 +1,40 @@
+name: Check New Release
+
+on:
+  #schedule:
+  #  - cron: '30 * * * *'
+  workflow_dispatch:
+
+jobs:
+  check_release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Get the latest release from the source repository
+        id: get_source_release
+        run: |
+          TARGET_REPO="ayufan/camera-streamer"
+          LATEST_RELEASE=$(curl -s https://api.github.com/repos/$TARGET_REPO/releases/latest)
+          LATEST_TAG=$(echo $LATEST_RELEASE | jq -r .tag_name)
+          echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+
+      - name: Get the latest release
+        id: get_latest_release
+        run: |
+          TARGET_REPO="meteyou/build-camera-streamer"
+          LATEST_RELEASE=$(curl -s https://api.github.com/repos/$TARGET_REPO/releases/latest)
+          LATEST_TAG=$(echo $LATEST_RELEASE | jq -r .tag_name)
+          echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+
+      - name: Compare the latest release
+        id: compare_release
+        run: |
+          SOURCE_TAG=${{ steps.get_source_release.outputs.latest_tag }}
+          TARGET_TAG=${{ steps.get_latest_release.outputs.latest_tag }}
+          if [ "$SOURCE_TAG" == "$TARGET_TAG" ]; then
+            echo "The latest release is the same"
+          else
+            echo "The latest release is different"
+          fi
