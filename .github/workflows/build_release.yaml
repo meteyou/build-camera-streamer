@@ -74,3 +74,44 @@ jobs:
           updateOnlyUnreleased: true
           prerelease: true
           generateReleaseNotes: true
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout camera-streamer
+        uses: actions/checkout@v4
+        with:
+          repository: 'ayufan/camera-streamer'
+          path: 'camera-streamer'
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Set GIT_VERSION
+        shell: bash
+        run: |
+          cd camera-streamer
+          majorVer=$(cat VERSION)
+          lastVer=$(git tag --sort version:refname --list "v$majorVer.*" | tail -n1)
+          if [[ -n "$lastVer" ]]; then
+            newVer=(${lastVer//./ })
+            newVer[-1]="$((${newVer[-1]}+1))"
+            nextVer="${newVer[*]}"
+            nextVer="${nextVer// /.}"
+          else
+            nextVer="v$majorVer.0"
+          fi
+          echo "MajorVer=$majorVer LastVer=$lastVer NextVer=$nextVer"
+          echo "GIT_VERSION=${nextVer//v/}" >> $GITHUB_ENV
+
+      - name: Get release
+        id: latest_release
+        uses: kaliber5/action-get-release@v1
+        with:
+          tag_name: "v${{ env.GIT_VERSION }}"
+
+      - uses: eregon/publish-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+        with:
+          release_id: ${{ steps.latest_release.outputs.id }}
