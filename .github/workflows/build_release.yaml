@@ -104,11 +104,13 @@ jobs:
           echo "MajorVer=$majorVer LastVer=$lastVer NextVer=$nextVer"
           echo "GIT_VERSION=${nextVer//v/}" >> $GITHUB_ENV
 
-      - name: Get release
+      - uses: cardinalby/git-get-release-action@v1
         id: latest_release
-        uses: kaliber5/action-get-release@v1
+        env:
+          GITHUB_TOKEN: ${{ github.PAT_TOKEN }}
         with:
-          tag_name: "v${{ env.GIT_VERSION }}"
+          tag: "v${{ env.GIT_VERSION }}"
+          prerelease: true
 
       - uses: eregon/publish-release@v1
         env:
