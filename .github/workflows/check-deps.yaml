@@ -113,8 +113,7 @@ jobs:
           same=$(diff last.txt combined_versions.txt > /dev/null && echo "same" || echo "different")
           echo "same=$same" >> $GITHUB_OUTPUT
           
-          rm -R versions_*.txt
-          mv combined_versions.txt last.txt
+          cp combined_versions.txt last.txt
 
       - name: Trigger build if there is a new version
         if: ${{ steps.new_result.outputs.same == 'different' }}
@@ -122,3 +121,9 @@ jobs:
         with:
           workflow: build_release.yaml
           token: ${{ secrets.PAT_TOKEN }}
+
+      - name: Save last.txt
+        uses: actions/cache/save@v4
+        with:
+          path: last.txt
+          key: ${{ runner.os }}-check-deps
