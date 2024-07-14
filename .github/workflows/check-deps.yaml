@@ -78,7 +78,8 @@ jobs:
           name: versions_${{ matrix.debian_version }}_${{ matrix.arch }}.txt
           path: .
 
-  compare-deps:
+  compare:
+    name: Compare
     runs-on: ubuntu-latest
     needs: get-deps
     steps:
@@ -104,12 +105,12 @@ jobs:
 
       - name: Output last libcamera0 versions
         run: |
+          touch last.txt
           cat last.txt
 
       - name: Compare with last result
         id: new_result
         run: |
-          touch last.txt
           same=$(diff last.txt combined_versions.txt > /dev/null && echo "same" || echo "different")
           echo "same=$same" >> $GITHUB_OUTPUT
           
